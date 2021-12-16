@@ -39,19 +39,19 @@ var choice_stim2 = 'right';
 // E.g., when nprop = 1/4 (or .25), then the basic design contains 8 trials (2 * 4).
 // The following values are allowed: 1/6, 1/5, 1/4, 1/3. 1/4 = default (recommended) value
 
-var nprop = 1/4;
+var nprop = 1/3;
 
 // How many times should we repeat the basic design per block?
 // E.g. when NdesignReps = 8 and nprop = 1/4 (see above), the number of trials per block = 64 (8*8)
 // Do this for the practice and experimental phases (note: practice can never be higher than exp)
 
-var NdesignReps_practice = 4;
-var NdesignReps_exp = 8;
+var NdesignReps_practice = 1;
+var NdesignReps_exp = 1;
 
 // Number of experimental blocks (excluding the first practice block).
 // Note that NexpBl = 0 will still run the practice block
 
-var NexpBL = 3;
+var NexpBL = 1;
 
 
 // ----- CUSTOMISE THE TIME INTERVALS (in milliseconds)-----
@@ -62,7 +62,7 @@ var MAXRT = 1250; // fixed maximum reaction time
 var SSD = 200;    // start value for the SSD tracking procedure; will be updated throughout the experiment
 var SSDstep = 50; // step size of the SSD tracking procedure; this is also the lowest possible SSD
 var iFBT = 750;   // immediate feedback interval (during the practice phase)
-var bFBT = 15000; // break interval between blocks
+var bFBT = 2000; // break interval between blocks
 
 
 // ----- CUSTOMISE INPUT/OUTPUT VARIABLES -----
@@ -78,7 +78,7 @@ var id = 'random' // use one of these three options: 'participant', 'url', 'rand
 // Please note that Safari does not support keyboard input when in full mode!!!
 // Therefore, this browser will be excluded by default
 
-var fullscreen = true; // Fullscreen mode or not?
+var fullscreen = false; // Fullscreen mode or not?
 var minWidth = 800; // minimum width of the experiment window
 var minHeight = 600; // minimum height of the experiment window
 
