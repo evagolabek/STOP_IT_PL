@@ -10,7 +10,7 @@ Qualtrics.SurveyEngine.addOnload(function () {
     qthis.hideNextButton();
 
     /* Change 2: Defining and load required resources */
-    var task_github = "https://kywch.github.io/STOP-IT/jsPsych_version/"; // https://<your-github-username>.github.io/<your-experiment-name>
+    var task_github = "https://evagolabek.github.io/STOP_IT_PL/"; // https://<your-github-username>.github.io/<your-experiment-name>
 
     // requiredResources must include all the JS files that demo-simple-rt-task-transformed.html uses.
     var requiredResources = [
@@ -47,7 +47,7 @@ Qualtrics.SurveyEngine.addOnload(function () {
     jQuery("<div id = 'display_stage_background'></div>").appendTo('body');
     jQuery("<div id = 'display_stage'></div>").appendTo('body');
 
-    /* Change 4: Adding save and helper functions */    
+    /* Change 4: Adding save and helper functions */
     function filter_data() {
         var ignore_columns = ['raw_rt', 'trial_type', 'first_stimulus', 'second_stimulus', 'onset_of_first_stimulus',
             'onset_of_second_stimulus', 'key_press', 'correct_response', 'trial_index', 'internal_node_id'
@@ -81,20 +81,83 @@ Qualtrics.SurveyEngine.addOnload(function () {
     // like https://users.rcc.uchicago.edu/~kywch/exp_data/save_data.php
     var save_url = "<PUT YOUR SAVE URL HERE>";
 
+	function avg(arr) {
+		  var sum = 0;
+		  // Iterate the elements of the array
+		  arr.forEach(function (item, idx) {
+			sum += item;
+		  });
+		  // Returning the average of the numbers
+		  return sum / arr.length;
+	}
+
     function save_data(data_dir, file_name) {
         var selected_data = filter_data();
         console.log("Save data function called.");
+
+		//empty arrays to push ssd per block
+		let ssd_zero = [];
+    let ssd_one = [];
+    let ssd_two = [];
+
+		let correct_stop = 0;
+		let failed_stop = 0;
+
+        for (let value of selected_data.values()) {
+
+          if(value.block_i === 0) {
+            ssd_zero.push(value.SSD);
+
+			if (value.correct === true) {
+				correct_stop++;
+			}
+			  else {
+					failed_stop++;
+				}
+          }
+
+          else if (value.block_i  === 1) {
+            ssd_one.push(value.SSD);
+
+			  if (value.correct === true) {
+				correct_stop++;
+			}
+			  else {
+					failed_stop++;
+				}
+          }
+
+          else if (value.block_i  === 2) {
+            ssd_two.push(value.SSD);
+
+			  if (value.correct === true) {
+				correct_stop++;
+			}
+			  else {
+					failed_stop++;
+				}
+          }
+        }
+
+		let ssd_zero_avg = avg(ssd_zero);
+		let ssd_one_avg = avg(ssd_one);
+		let ssd_two_avg = avg(ssd_two);
+		let ssd_total_avg = Math.round(selected_data.select("SSD").mean());
+
         try {
-            jQuery.ajax({
-                type: 'post',
-                cache: false,
-                url: save_url,
-                data: {
-                    data_dir: data_dir,
-                    file_name: file_name + '.csv', // the file type should be added
-                    exp_data: selected_data.csv()
-                }
-            });
+
+      //save to qualtrics average ssd per block
+			Qualtrics.SurveyEngine.setEmbeddedData("ssd_block_one_avg", ssd_zero_avg);
+			Qualtrics.SurveyEngine.setEmbeddedData("ssd_block_two_avg", ssd_one_avg);
+			Qualtrics.SurveyEngine.setEmbeddedData("ssd_block_three_avg", ssd_two_avg);
+      //save to qualtrics total ssd average
+      Qualtrics.SurveyEngine.setEmbeddedData("ssd_total_avg", ssd_total_avg)
+
+      //save to qualtrics total correct and failed stops
+      Qualtrics.SurveyEngine.setEmbeddedData("correct_stops", correct_stop);
+      Qualtrics.SurveyEngine.setEmbeddedData("failed_stops", failed_stop);
+
+
         } catch (err) {
             console.log("Save data function failed.", err);
         }
@@ -143,6 +206,7 @@ Qualtrics.SurveyEngine.addOnload(function () {
             on_interaction_data_update: function (
                 data) { //interaction data logs if participants leaves the browser window or exits full screen mode
                 interaction = data.event;
+
                 if (interaction.includes("fullscreen")) {
                     // some unhandy coding to circumvent a bug in jspsych that logs fullscreenexit when actually entering
                     if (fullscr_ON == 'no') {
