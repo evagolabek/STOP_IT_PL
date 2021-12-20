@@ -1,3 +1,4 @@
+
 Qualtrics.SurveyEngine.addOnload(function () {
 
     /*Place your JavaScript here to run when the page loads*/
@@ -94,66 +95,86 @@ Qualtrics.SurveyEngine.addOnload(function () {
     function save_data(data_dir, file_name) {
         var selected_data = filter_data();
         console.log("Save data function called.");
+		console.log("selected_data", selected_data.values());
 
-		//empty arrays to push ssd per block
-		let ssd_zero = [];
-    let ssd_one = [];
-    let ssd_two = [];
+		let prop_ns_Missed_b1 = 0;
+		let prop_ss_Correct_b1 = 0;
 
-		let correct_stop = 0;
-		let failed_stop = 0;
+		let prop_ns_Missed_b2 = 0;
+		let prop_ss_Correct_b2 = 0;
+
+	    let prop_ns_Missed_b3 = 0;
+		let prop_ss_Correct_b3 = 0;
+
 
         for (let value of selected_data.values()) {
-
-          if(value.block_i === 0) {
-            ssd_zero.push(value.SSD);
-
-			if (value.correct === true) {
-				correct_stop++;
+          if(value.block_i === 1) {
+			if (value.signal && value.correct) {
+				prop_ss_Correct_b1++;
 			}
-			  else {
-					failed_stop++;
-				}
+			  else if (value.signal && !value.correct) {
+				   prop_ns_Missed_b1++ ;
           }
-
-          else if (value.block_i  === 1) {
-            ssd_one.push(value.SSD);
-
-			  if (value.correct === true) {
-				correct_stop++;
-			}
-			  else {
-					failed_stop++;
-				}
-          }
-
           else if (value.block_i  === 2) {
-            ssd_two.push(value.SSD);
-
-			  if (value.correct === true) {
-				correct_stop++;
+			  if (value.signal && value.correct) {
+				 prop_ss_Correct_b2++ ;
 			}
-			  else {
-					failed_stop++;
-				}
+			  else if (value.signal && !value.correct) {
+			prop_ns_Missed_b2++;
           }
-        }
+       }
+		else if (value.block_i  === 3) {
+			  if (value.signal && value.correct) {
+				 prop_ss_Correct_b3++ ;
+			}
+			  else if (value.signal && !value.correct) {
+			prop_ns_Missed_b3++;
+          }
 
-		let ssd_zero_avg = avg(ssd_zero);
-		let ssd_one_avg = avg(ssd_one);
-		let ssd_two_avg = avg(ssd_two);
-		let ssd_total_avg = Math.round(selected_data.select("SSD").mean());
+       }
+	}
+
+}
+
+		let block_one = selected_data.values().map(x=> x.block_i === 1).select("rt").mean();
+    console.log("block one rt mean", block_one);
+
+
+
+		//get proportion of correct and failed stops
+		//let prop_ns_Missed_b1 = 0;
+		//let prop_ss_Correct_b1 = 0;
+
+		//let prop_ns_Missed_b2 = 0;
+		//let prop_ss_Correct_b2 = 0;
+
+	   // let prop_ns_Missed_b3 = 0;
+		//let prop_ss_Correct_b3 = 0;
+
+		//let prop_ns_Missed_total = 0;
+		//let prop_ss_Correct_total = 0;
+
+		// console.log("avg_nsRT_block_one", avg_nsRT_block_one);
+		// console.log("avg_nsRT_block_two", avg_nsRT_block_two);
+		// console.log("avg_nsRT_block_three", avg_nsRT_block_three);
+    //
+		// console.log("missed-stops-b1",  prop_ns_Missed_b1);
+		// console.log("missed-stops-b2",  prop_ns_Missed_b2);
+		// console.log("missed-stops-b3",  prop_ns_Missed_b3);
+    //
+		// console.log("correct-stops-b1",  prop_ss_Correct_b1);
+		// console.log("correct-stops-b2",  prop_ss_Correct_b1);
+		// console.log("correct-stops-b3",  prop_ss_Correct_b1);
 
         try {
 
-      //save to qualtrics average ssd per block
-			Qualtrics.SurveyEngine.setEmbeddedData("ssd_block_one_avg", ssd_zero_avg);
-			Qualtrics.SurveyEngine.setEmbeddedData("ssd_block_two_avg", ssd_one_avg);
-			Qualtrics.SurveyEngine.setEmbeddedData("ssd_block_three_avg", ssd_two_avg);
-      //save to qualtrics total ssd average
-      Qualtrics.SurveyEngine.setEmbeddedData("ssd_total_avg", ssd_total_avg)
+      //save to qualtrics average nsRT per block and total avg
+			Qualtrics.SurveyEngine.setEmbeddedData("avg_nsRT_block_one", avg_nsRT_block_one);
+			Qualtrics.SurveyEngine.setEmbeddedData("avg_nsRT_block_two", avg_nsRT_block_two);
+			Qualtrics.SurveyEngine.setEmbeddedData("avg_nsRT_block_three", avg_nsRT_block_three);
+			Qualtrics.SurveyEngine.setEmbeddedData("avg_nsRT_total", avg_nsRT_total);
 
-      //save to qualtrics total correct and failed stops
+      //save to qualtrics total correct and failed stops per block and total avg
       Qualtrics.SurveyEngine.setEmbeddedData("correct_stops", correct_stop);
       Qualtrics.SurveyEngine.setEmbeddedData("failed_stops", failed_stop);
 
