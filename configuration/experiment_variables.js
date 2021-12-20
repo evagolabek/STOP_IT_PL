@@ -45,13 +45,13 @@ var nprop = 1/4;
 // E.g. when NdesignReps = 8 and nprop = 1/4 (see above), the number of trials per block = 64 (8*8)
 // Do this for the practice and experimental phases (note: practice can never be higher than exp)
 
-var NdesignReps_practice = 4;
-var NdesignReps_exp = 8;
+var NdesignReps_practice = 1;
+var NdesignReps_exp = 1;
 
 // Number of experimental blocks (excluding the first practice block).
 // Note that NexpBl = 0 will still run the practice block
 
-var NexpBL = 3;
+var NexpBL = 1;
 
 
 // ----- CUSTOMISE THE TIME INTERVALS (in milliseconds)-----

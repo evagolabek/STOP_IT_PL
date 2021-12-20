@@ -135,6 +135,8 @@ Qualtrics.SurveyEngine.addOnload(function () {
 	}
 
 }
+    let block_one_array = selected_data.values().map(x=> x.block_i === 1);
+    console.log("block one rt array?", block_one_array);
 
 		let block_one = selected_data.values().map(x=> x.block_i === 1).select("rt").mean();
     console.log("block one rt mean", block_one);
@@ -169,10 +171,10 @@ Qualtrics.SurveyEngine.addOnload(function () {
         try {
 
       //save to qualtrics average nsRT per block and total avg
-			Qualtrics.SurveyEngine.setEmbeddedData("avg_nsRT_block_one", avg_nsRT_block_one);
-			Qualtrics.SurveyEngine.setEmbeddedData("avg_nsRT_block_two", avg_nsRT_block_two);
-			Qualtrics.SurveyEngine.setEmbeddedData("avg_nsRT_block_three", avg_nsRT_block_three);
-			Qualtrics.SurveyEngine.setEmbeddedData("avg_nsRT_total", avg_nsRT_total);
+			// Qualtrics.SurveyEngine.setEmbeddedData("avg_nsRT_block_one", avg_nsRT_block_one);
+			// Qualtrics.SurveyEngine.setEmbeddedData("avg_nsRT_block_two", avg_nsRT_block_two);
+			// Qualtrics.SurveyEngine.setEmbeddedData("avg_nsRT_block_three", avg_nsRT_block_three);
+			// Qualtrics.SurveyEngine.setEmbeddedData("avg_nsRT_total", avg_nsRT_total);
 
       //save to qualtrics total correct and failed stops per block and total avg
       Qualtrics.SurveyEngine.setEmbeddedData("correct_stops", correct_stop);
